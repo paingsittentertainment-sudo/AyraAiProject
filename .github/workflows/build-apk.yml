@@ -14,19 +14,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ဒါက ကိုကို့အတွက် Project မြေပုံကို စက်ရုပ်ထဲမှာ အလိုလိုဆောက်ပေးတာပါ
-      - name: Auto Create Project Files
+      - name: Setup Project Structure
         run: |
+          # နာမည်မှားနေတဲ့ Error ကို ပြင်ဖို့ settings.gradle အလိုလိုဆောက်ပေးမယ်
+          echo "rootProject.name = 'AyraAI'" > settings.gradle
+          
+          # Folder တွေ အလိုလိုဆောက်မယ်
           mkdir -p app/src/main/java/com/my/ayra
           mkdir -p app/src/main/res/layout
           
-          # ၁။ build.gradle ဆောက်မယ်
-          cat <<EOF > build.gradle
-          buildscript { repositories { google(); mavenCentral() } }
-          allprojects { repositories { google(); mavenCentral() } }
-          EOF
-
-          # ၂။ app/build.gradle ဆောက်မယ်
+          # App ရဲ့ Build ဖိုင်ဆောက်မယ်
           cat <<EOF > app/build.gradle
           apply plugin: 'com.android.application'
           android {
@@ -42,7 +39,7 @@ jobs:
           }
           EOF
 
-          # ၃။ AndroidManifest.xml ဆောက်မယ်
+          # Manifest ဆောက်မယ်
           cat <<EOF > app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.my.ayra">
               <uses-permission android:name="android.permission.INTERNET" />
@@ -57,24 +54,8 @@ jobs:
           </manifest>
           EOF
 
-          # ၄။ Layout (main.xml) ဆောက်မယ်
-          cat <<EOF > app/src/main/res/layout/main.xml
-          $(cat <<'INNER_EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#121212">
-              <ScrollView android:id="@+id/scrollView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"><LinearLayout android:id="@+id/chatContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="10dp" /></ScrollView>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="10dp" android:background="#1E1E1E">
-                  <EditText android:id="@+id/userInput" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Ask Ayra AI..." android:textColor="#FFFFFF" android:background="@android:color/transparent" />
-                  <TextView android:id="@+id/sendBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEND" android:textColor="#1A73E8" android:textStyle="bold" android:padding="10dp" />
-              </LinearLayout>
-          </LinearLayout>
-          INNER_EOF
-          )
-          EOF
-
-          # ၅။ Java (MainActivity.java) ဆောက်မယ်
+          # Java Code ထည့်မယ်
           cat <<EOF > app/src/main/java/com/my/ayra/MainActivity.java
-          $(cat <<'INNER_EOF'
           package com.my.ayra;
           import android.app.Activity;
           import android.os.*;
@@ -121,7 +102,7 @@ jobs:
                       StringBuilder sb = new StringBuilder(); String line;
                       while ((line = br.readLine()) != null) sb.append(line);
                       return new JSONObject(sb.toString()).getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
-                  } catch (Exception e) { return "Internet connection error!"; }
+                  } catch (Exception e) { return "Internet Error!"; }
               }
               private TextView addChatBubble(String text, boolean isUser) {
                   TextView tv = new TextView(this); tv.setText(text); tv.setPadding(40, 30, 40, 30); tv.setTextColor(Color.WHITE);
@@ -132,20 +113,29 @@ jobs:
                   tv.setBackground(gd); tv.setLayoutParams(params); chatContainer.addView(tv); return tv;
               }
           }
-          INNER_EOF
-          )
           EOF
 
-      - name: Build debug APK
+          # Layout ဆောက်မယ်
+          cat <<EOF > app/src/main/res/layout/main.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#121212">
+              <ScrollView android:id="@+id/scrollView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"><LinearLayout android:id="@+id/chatContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="10dp" /></ScrollView>
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="10dp" android:background="#1E1E1E">
+                  <EditText android:id="@+id/userInput" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Ask Ayra AI..." android:textColor="#FFFFFF" android:background="@android:color/transparent" />
+                  <TextView android:id="@+id/sendBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEND" android:textColor="#1A73E8" android:textStyle="bold" android:padding="10dp" />
+              </LinearLayout>
+          </LinearLayout>
+          EOF
+
+      - name: Build APK
         run: |
-          if [ ! -f "gradlew" ]; then
-            gradle wrapper --gradle-version 8.4
-          fi
+          gradle wrapper --gradle-version 8.4
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
+          name: AyraAI-APK
           path: app/build/outputs/apk/debug/*.apk
+          
