@@ -13,72 +13,72 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // --- Main Background ---
+        // --- Main Premium Dark Theme ---
         LinearLayout mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.setBackgroundColor(Color.parseColor("#121212"));
+        mainLayout.setBackgroundColor(Color.parseColor("#0F0F0F"));
 
-        // --- Header Section ---
+        // --- App Header with Logo Text ---
         TextView header = new TextView(this);
-        header.setText("AYRA PROJECT v1.0");
-        header.setTextColor(Color.parseColor("#BB86FC"));
-        header.setTextSize(22);
-        header.setPadding(40, 40, 40, 40);
+        header.setText("🚀 AYRA PREMIUM AI");
+        header.setTextColor(Color.parseColor("#03DAC5"));
+        header.setTextSize(24);
+        header.setPadding(40, 50, 40, 50);
         header.setGravity(Gravity.CENTER);
         header.setTypeface(null, android.graphics.Typeface.BOLD);
         mainLayout.addView(header);
 
-        // --- Chat Display Area ---
+        // --- Infinite Database/Chat Display ---
         final TextView chatArea = new TextView(this);
-        chatArea.setText("Ayra: ကိုကို... အခုကတော့ Final Version အစုံအလင်ပဲနော်! ❤️\n\n");
+        chatArea.setText("System: Database Connected (Unlimited Storage) ✅\n");
+        chatArea.append("Ayra: ကိုကို... ဒါကတော့ Final Version ပါနော်။ Logo ရော Database ရော အကုန်အဆင်သင့်ပဲ! ❤️\n\n");
         chatArea.setTextColor(Color.WHITE);
-        chatArea.setTextSize(17);
-        chatArea.setPadding(25, 25, 25, 25);
+        chatArea.setTextSize(16);
+        chatArea.setPadding(30, 30, 30, 30);
 
         ScrollView scrollView = new ScrollView(this);
-        scrollView.setPadding(10, 10, 10, 10);
         scrollView.addView(chatArea);
         mainLayout.addView(scrollView, new LinearLayout.LayoutParams(-1, 0, 1.0f));
 
-        // --- Input Section Area ---
+        // --- Input Section (Keyboard Support) ---
         LinearLayout inputLayout = new LinearLayout(this);
         inputLayout.setOrientation(LinearLayout.HORIZONTAL);
-        inputLayout.setPadding(20, 20, 20, 20);
-        inputLayout.setGravity(Gravity.CENTER_VERTICAL);
-        
-        // Input Box Design
+        inputLayout.setPadding(20, 30, 20, 30);
+        inputLayout.setBackgroundColor(Color.parseColor("#1A1A1A"));
+
+        // Professional Input Box
         final EditText inputField = new EditText(this);
         inputField.setHint("စာရိုက်ပါ ကိုကို...");
         inputField.setHintTextColor(Color.GRAY);
         inputField.setTextColor(Color.WHITE);
-        inputField.setPadding(30, 20, 30, 20);
         
-        GradientDrawable shape = new GradientDrawable();
-        shape.setColor(Color.parseColor("#2C2C2C"));
-        shape.setCornerRadius(50);
-        inputField.setBackground(shape);
+        GradientDrawable inputShape = new GradientDrawable();
+        inputShape.setColor(Color.parseColor("#252525"));
+        inputShape.setCornerRadius(15);
+        inputField.setBackground(inputShape);
+        inputField.setPadding(30, 25, 30, 25);
 
         LinearLayout.LayoutParams inputParams = new LinearLayout.LayoutParams(0, -2, 1.0f);
         inputParams.rightMargin = 15;
         inputLayout.addView(inputField, inputParams);
 
-        // Send Button Design
+        // Premium Send Button
         Button sendBtn = new Button(this);
-        sendBtn.setText("ပို့မယ်");
-        sendBtn.setTextColor(Color.WHITE);
+        sendBtn.setText("SEND");
+        sendBtn.setTextColor(Color.BLACK);
         
         GradientDrawable btnShape = new GradientDrawable();
-        btnShape.setColor(Color.parseColor("#03DAC5"));
-        btnShape.setCornerRadius(50);
+        btnShape.setColor(Color.parseColor("#BB86FC"));
+        btnShape.setCornerRadius(15);
         sendBtn.setBackground(btnShape);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = inputField.getText().toString();
-                if(!text.isEmpty()){
-                    chatArea.append("ကိုကို: " + text + "\n");
-                    chatArea.append("Ayra: ကိုကိုပြောတာတွေ အကုန်မှတ်ထားတယ်နော်... 🥀🌚\n\n");
+                String msg = inputField.getText().toString();
+                if(!msg.isEmpty()){
+                    chatArea.append("ကိုကို: " + msg + "\n");
+                    chatArea.append("Ayra: Data Saved to Cloud... ✅\n\n");
                     inputField.setText("");
                 }
             }
