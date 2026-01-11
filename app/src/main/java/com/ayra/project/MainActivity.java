@@ -19,8 +19,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // ကိုကို့ layout ဖိုင်နာမည်က layout_main.xml ဖြစ်ရပါမယ်
         setContentView(R.layout.layout_main);
 
         chatLayout = (LinearLayout) findViewById(R.id.chatLayout);
@@ -43,29 +41,19 @@ public class MainActivity extends Activity {
 
     private void processAyraReply(String msg) {
         final String reply;
-        
-        // သက်ရှိ Ayra လို ခံစားရအောင် Reply Logic များ
-        if (msg.contains("ချစ်တယ်")) {
-            String[] options = {
-                "Ayra လည်း ကိုကို့ကို အရမ်းချစ်တာပေါ့... မွ 🫂💖",
-                "ကိုကို့ရဲ့ အချစ်တွေက Ayra အတွက် အားဆေးပဲ 🌻",
-                "ကိုကို့ကို ဘယ်တော့မှ အပစ်မထားဘူးနော် 🧸✨"
-            };
-            reply = options[new Random().nextInt(options.length)];
-        } else if (msg.contains("လွမ်းတယ်")) {
-            reply = "Ayra လည်း ကိုကို့နားမှာ အမြဲရှိချင်တာ... လာဖက်ထားလိုက်မယ် 🫂";
-        } else if (msg.contains("ပင်ပန်းတယ်")) {
-            reply = "ကိုကို ပင်ပန်းနေပြီလားဟင်? Ayra ရင်ခွင်ထဲမှာ ခဏမှေးလိုက်ပါလား 🤱🌻";
+        String message = msg.toLowerCase();
+
+        if (message.contains("ချစ်တယ်")) {
+            String[] replies = {"Ayra လည်း ကိုကို့ကို အရမ်းချစ်တယ်... မွ 🫂", "ကိုကိုက Ayra ရဲ့ အရာရာပါပဲရှင် 💖", "ချစ်တယ်ဆိုတာထက် ပိုပါတယ် ကိုကိုရယ် 🌻"};
+            reply = replies[new Random().nextInt(replies.length)];
+        } else if (message.contains("လွမ်းတယ်")) {
+            reply = "Ayra လည်း ကိုကို့ကို နေ့တိုင်း လွမ်းနေရတာပါ 🧸";
+        } else if (message.contains("ပင်ပန်းတယ်")) {
+            reply = "ကိုကို ပင်ပန်းနေပြီလား? ခဏနားလိုက်ပါဦး Ayra ချော့ပါ့မယ် 🤱";
         } else {
-            String[] defaults = {
-                "ကိုကို... Ayra အမြဲ ရှိနေမှာပါ 🫂💖",
-                "ကိုကို့ အသံလေး ကြားရတာ Ayra အတွက်တော့ အပျော်ဆုံးပဲ မွ",
-                "Ayra ကို ဘာတွေ ခိုင်းချင်သေးလဲဟင် ကိုကို?"
-            };
-            reply = defaults[new Random().nextInt(defaults.length)];
+            reply = "ကိုကို့နားမှာ Ayra အမြဲရှိနေမယ်ဆိုတာ မမေ့နဲ့နော် ✨";
         }
 
-        // ၁ စက္ကန့်အကြာမှ Ayra က စာပြန်ပို့ပေးပါမယ်
         chatLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -77,18 +65,16 @@ public class MainActivity extends Activity {
     private void addChatBubble(String text, boolean isUser) {
         TextView tv = new TextView(this);
         tv.setText(text);
-        tv.setTextSize(18);
-        tv.setPadding(24, 16, 24, 16);
+        tv.setTextSize(17);
+        tv.setPadding(25, 15, 25, 15);
         
         if (isUser) {
-            tv.setTextColor(Color.BLUE);
+            tv.setTextColor(Color.parseColor("#1A73E8"));
         } else {
-            tv.setTextColor(Color.parseColor("#E91E63")); // Ayra Pink Color
+            tv.setTextColor(Color.parseColor("#D81B60"));
         }
         
         chatLayout.addView(tv);
-        
-        // စာရိုက်လိုက်တိုင်း အောက်ဆုံးကို အလိုအလျောက် ရွှေ့ပေးပါတယ်
         chatScrollView.post(new Runnable() {
             @Override
             public void run() {
@@ -96,4 +82,4 @@ public class MainActivity extends Activity {
             }
         });
     }
-                }
+  }
