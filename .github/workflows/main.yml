@@ -1,4 +1,4 @@
-name: Android Build APK
+name: Build Ayra APK
 on: [push]
 jobs:
   build:
@@ -10,17 +10,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
       - name: Build with Gradle
-        # gradlew မရှိရင် တိုက်ရိုက် gradle ကို သုံးပြီး build ခိုင်းလိုက်ပါမယ်
         run: gradle assembleDebug
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Ayra-Official-APK
-          path: "**/*.apk" # apk ဘယ်နေရာမှာရှိရှိ အကုန်ရှာပြီး ထည့်ခိုင်းလိုက်တာပါ
+          path: "**/*.apk"
           
