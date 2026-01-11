@@ -1,31 +1,25 @@
-name: Android CI
-
-on:
-  push:
-    branches: [ "main" ]
-
+name: Android Build APK
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - uses: actions/checkout@v4 # v4 သို့ ပြောင်းထားပါသည်
+      - name: set up JDK 17
+        uses: actions/setup-java@v4 # v4 သို့ ပြောင်းထားပါသည်
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Build Debug APK
+        run: chmod +x gradlew && ./gradlew assembleDebug
 
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: Ayra-Ai-Debug-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
-        
+      - name: Upload APK
+        uses: actions/upload-artifact@v4 # ဤနေရာတွင် v4 ပြောင်းသုံးမှ error ပျောက်ပါမည်
+        with:
+          name: Ayra-Official-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          
